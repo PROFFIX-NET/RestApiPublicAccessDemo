@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+
+    <title>Mitarbeiter Stempelliste</title>
+  </head>
+  <body>
+      <nav class="navbar navbar-light bg-light">
+          <div class="container">
+            <a href="" class="navbar-brand">
+                <i class="fas fa-users"></i> Mitarbeiter Stempelliste
+            </a>
+            <span class="navbar-text">Aufruf der PROFFIX REST API auf einer öffentlichen Webseite</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 80px">Stempelstatus</th>
+                    <th scope="col">Name</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+                <tr>
+                    <td colspan="2" class="text-muted text-center"><i class="fas fa-circle-notch fa-spin"></i> Daten werden geladen...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // Mitarbeiterliste laden
+            $.getJSON("/api/Mitarbeiterliste", function(mitarbeiterliste) {
+                $("#tablebody").empty(); // Tabelle leeren
+
+                // Mitarbeiterliste in Tabelle abfüllen
+                if(mitarbeiterliste.forEach) {
+                    mitarbeiterliste.forEach(function(value) {
+                        if(value.MitarbeiterNr && value.Name) {
+                            $("#tablebody").append('<tr><td id="manr' + value.MitarbeiterNr + '" class="text-center"><i class="fas fa-circle-notch fa-spin text-muted"></i></td><td>' + value.Name + '</td></tr>')
+
+                            // Stempelstatus pro Mitarbeiter laden
+                            $.getJSON("/api/MitarbeiterStempelstatus/" + value.MitarbeiterNr, function(status) {
+                                if(status.Eingestempelt != undefined) {
+                                    $("#manr" + value.MitarbeiterNr).empty().html('<i class="fas fa-user-' + ((status.Eingestempelt) ? 'check text-success' : 'times text-danger') + '"></i>');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+  </body>
+</html>
