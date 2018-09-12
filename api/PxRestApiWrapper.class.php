@@ -36,7 +36,7 @@ class PxRestApiWrapper
      * Funktion getInstance
      * @return: liefert die einzige Instanz des PxRestApiWrappers zurück
      */
-    public static function getInstance() : PxRestApiWrapper
+    public static function getInstance()
     {
         if (self::$INSTANCE === null) {
             self::$INSTANCE = new PxRestApiWrapper();
@@ -51,7 +51,7 @@ class PxRestApiWrapper
      * (Query-Parameter sind zum Beispiel "filter", "sort", "offset" und "limit")
      * @return: Response
      */
-    public function Get($endpointWithParams) : \Httpful\Response
+    public function Get($endpointWithParams)
     {
         $response = \Httpful\Request::get($this->webserviceUrl . $endpointWithParams)
             ->expectsJson()
@@ -84,7 +84,7 @@ class PxRestApiWrapper
      * @param body: Im Body werden die zu schreibenden Werte im JSON-Format mitgesendet
      * @return: Response
      */
-    public function Post($endpointWithParams, $body) : \Httpful\Response
+    public function Post($endpointWithParams, $body)
     {
         $response = \Httpful\Request::post($this->webserviceUrl . $endpointWithParams)
             ->expectsJson()
